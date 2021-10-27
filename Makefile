@@ -66,9 +66,7 @@ $(OBJS_DIR)/%.cpp.o	:	$(SRCS_DIR)/%.cpp $(DEPS_DIR)/$(SRCS_DIR)/%.cpp.d
 
 clean	:
 	$(RM) $(OBJS_DIR)
-ifneq ($(filter re, $(MAKECMDGOALS)),re)
 	$(RM) $(DEPS_DIR)
-endif
 
 fclean	:	clean
 	$(RM) $(NAME)
