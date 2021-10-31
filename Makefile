@@ -24,15 +24,16 @@ DEPS_DIR	=	deps
 CC_SRCS		=	
 CXX_SRCS	=	main.cpp
 
-INCS		=	$(shell find $(SRCS_DIR) $(INCS_DIR) -type f -name '*.h' -o -name '*.hpp')
+CC_INCS		=	$(shell find $(SRCS_DIR) $(INCS_DIR) -type f -name '*.h')
+CXX_INCS	=	$(shell find $(SRCS_DIR) $(INCS_DIR) -type f -name '*.hpp')
 
 OBJS		=	$(CC_SRCS:%.c=$(OBJS_DIR)/%.c.o) \
 				$(CXX_SRCS:%.cpp=$(OBJS_DIR)/%.cpp.o)
 
 DEPS		=	$(CC_SRCS:%.c=$(DEPS_DIR)/$(SRCS_DIR)/%.c.d) \
 				$(CXX_SRCS:%.cpp=$(DEPS_DIR)/$(SRCS_DIR)/%.cpp.d) \
-				$(INCS:%.h=$(DEPS_DIR)/%.h.d) \
-				$(INCS:%.hpp=$(DEPS_DIR)/%.hpp.d)
+				$(CC_INCS:%.h=$(DEPS_DIR)/%.h.d) \
+				$(CXX_INCS:%.hpp=$(DEPS_DIR)/%.hpp.d)
 
 all	:	$(NAME)
 
@@ -47,11 +48,11 @@ $(DEPS_DIR)/$(SRCS_DIR)/%.cpp.d	:	$(SRCS_DIR)/%.cpp
 	@$(MKDIR) $(@D)
 	$(CXX) $(CXXFLAGS) -MM -MT $(<:$(SRCS_DIR)/%.cpp=$(OBJS_DIR)/%.cpp.o) $< -o $@
 
-$(INCS:%.h=$(DEPS_DIR)/%.h.d)	:
+$(CC_INCS:%.h=$(DEPS_DIR)/%.h.d)	:
 	@$(MKDIR) $(@D)
-	$(CXX) $(CXXFLAGS) -MM -MT $@ $(@:$(DEPS_DIR)/%.h.d=%.h) -o $@
+	$(CC) $(CCFLAGS) -MM -MT $@ $(@:$(DEPS_DIR)/%.h.d=%.h) -o $@
 
-$(INCS:%.hpp=$(DEPS_DIR)/%.hpp.d)	:
+$(CXX_INCS:%.hpp=$(DEPS_DIR)/%.hpp.d)	:
 	@$(MKDIR) $(@D)
 	$(CXX) $(CXXFLAGS) -MM -MT $@ $(@:$(DEPS_DIR)/%.hpp.d=%.hpp) -o $@
 
